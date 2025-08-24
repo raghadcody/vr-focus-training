@@ -21,7 +21,6 @@ The project is designed in **Unity**, with **3D models and animations created in
 ## 🛠️ Tools & Technologies  
 - **Unity** – VR development platform  
 - **Blender** – 3D modeling & animation  
-- **C# (basic Unity scripts if needed)**  
 
 ---
 
