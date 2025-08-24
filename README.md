@@ -24,12 +24,6 @@ The project is designed in **Unity**, with **3D models and animations created in
 
 ---
 
-## 📂 Repository Structure  
-
-/Assets → Unity project assets
-/Models → Blender 3D models
-/Animations → Character & object animations
-/Docs → Reports, diagrams, and documentation
 
 
 
