@@ -33,7 +33,6 @@ The VR experience provides structured practice, adaptive prompts, multimodal fee
 
 ## Wireframe & Structure Overview
 
-> *(Replace with your actual screenshots when designing the repository visuals)*
 
 **Main Screens / Interfaces:**
 
