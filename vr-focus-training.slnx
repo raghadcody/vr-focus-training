@@ -24,6 +24,7 @@
   <Project Path="Unity.AI.Animate.csproj" />
   <Project Path="Unity.AI.Toolkit.Accounts.csproj" />
   <Project Path="Unity.XR.Interaction.Toolkit.Editor.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Unity.InferenceEngine.csproj" />
   <Project Path="Unity.XR.CoreUtils.csproj" />
   <Project Path="Unity.Searcher.Editor.csproj" />
@@ -39,7 +40,6 @@
   <Project Path="Unity.Burst.CodeGen.csproj" />
   <Project Path="Unity.Postprocessing.Editor.csproj" />
   <Project Path="Unity.VisualScripting.Flow.csproj" />
-  <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Unity.PerformanceTesting.csproj" />
   <Project Path="Unity.AI.Image.csproj" />
   <Project Path="Unity.AppUI.Navigation.Editor.csproj" />

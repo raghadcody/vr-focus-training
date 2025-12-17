@@ -1,133 +1,136 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
-
 
 public class LevelOneChecklistManager : MonoBehaviour
 {
-    
+    [Header("UI References")]
+    // Drag your 3 Bedroom Toggles here IN ORDER: Wakeup, flibflob, opendoor
     public Toggle[] taskToggles;
-    public GameObject lv1checklist; 
+    public GameObject lv1checklist;
 
-    
     [Header("Message UI")]
     public TextMeshProUGUI messageText;
-    public float messageDuration = 2f;
-
-    public GameObject FlipFlops;
+    public float messageDuration = 2.5f;
 
     [Header("Level State")]
-    private int currentTaskIndex = -1; 
+    // Start at 0 to match Level Two logic
+    private int currentTaskIndex = 0;
 
-    
+    void Start()
+    {
+        InitializeLevelOne();
+    }
+
+    public void InitializeLevelOne()
+    {
+        currentTaskIndex = 0;
+
+        for (int i = 0; i < taskToggles.Length; i++)
+        {
+            if (taskToggles[i] != null)
+            {
+                taskToggles[i].isOn = false;
+                // Only show the first task if needed, or hide all until Start is pressed
+                // If you want the checklist empty until Start, set all to false
+                taskToggles[i].gameObject.SetActive(false);
+            }
+        }
+
+        if (messageText != null)
+            messageText.gameObject.SetActive(false);
+
+        Debug.Log("Level One Initialized. Press Start to begin.");
+    }
+
+    // --- TASK FUNCTIONS (Called by VR Object Events) ---
+
+    // Task 0: Start Routine (Wake Up)
     public void StartRoutine()
     {
-        if (currentTaskIndex == -1)
+        if (currentTaskIndex == 0)
         {
-            currentTaskIndex = 0;
-
-            
-            Toggle Wakeup = taskToggles[0];
-            Wakeup.isOn = false; 
+            // Note: We show the toggle first so CompleteTask can check it
+            taskToggles[0].gameObject.SetActive(true);
             CompleteTask(0);
-            Wakeup.isOn = true; 
-
-            
-            Debug.Log("Routine Started. Task 0 (Get out of Bed) Complete. Waiting for Flip-Flops (Task 1).");
+            Debug.Log("Routine Started. Task 0 (Wake Up) complete.");
         }
     }
 
+    // Task 1: Wear Flip-Flops
     public void flibflobwore()
     {
-        
-        if (currentTaskIndex == 1) 
+        if (currentTaskIndex == 1)
         {
-            
-            Toggle Flipflop = taskToggles[1];
-            Flipflop.isOn = false; 
-
-            CompleteTask(1); 
-
-            Flipflop.isOn = true; 
-
-            Debug.Log("Routine Started. Task 1 (wearflibflob) Complete. Waiting for open door.");
+            CompleteTask(1);
+            Debug.Log("Task 1 (Flip-Flops) complete.");
         }
     }
 
+    // Task 2: Open Bedroom Door
     public void opendoor()
     {
-        
-        if (currentTaskIndex == 2) 
+        if (currentTaskIndex == 2)
         {
-            
-            Toggle Opendoor = taskToggles[2];
-            Opendoor.isOn = false; 
-
-            CompleteTask(2); 
-
-            Opendoor.isOn = true; 
-
-            Debug.Log("Routine Started. Task 2 (open door) Complete. Waiting for Bathroom.");
+            CompleteTask(2);
+            Debug.Log("Task 2 (Open Door) complete.");
         }
     }
 
-    
+    // --- CORE LOGIC (Identical to Level Two) ---
+
     public void CompleteTask(int completedTaskID)
     {
-        
+        // 1. Enforce Order
         if (completedTaskID != currentTaskIndex)
         {
-            Debug.LogWarning("Task sequence broken! Player tried to complete Task " + completedTaskID + " before Task " + currentTaskIndex);
+            Debug.LogWarning($"Sequence broken! Tried Task {completedTaskID}, but expected {currentTaskIndex}");
             return;
         }
 
-        
-        if (currentTaskIndex >= 0 && currentTaskIndex < taskToggles.Length)
+        // 2. Mark current toggle as checked
+        if (taskToggles[currentTaskIndex] != null)
         {
             taskToggles[currentTaskIndex].isOn = true;
         }
 
-        
-        
+        // 3. Move to next task
         currentTaskIndex++;
 
-        
+        // 4. Handle next step or finish
         if (currentTaskIndex < taskToggles.Length)
         {
-            
-            if (messageText != null)
+            // Reveal the next toggle
+            taskToggles[currentTaskIndex].gameObject.SetActive(true);
+
+            // Set the instruction for the NEXT step
+            string nextAction = "";
+            switch (currentTaskIndex)
             {
-                string nextTaskName = "";
-                switch (currentTaskIndex)
-                {
-                    case 1:
-                        nextTaskName = "Wear the flip-flops";
-                        break;
-                    case 2:
-                        nextTaskName = "Open the door";
-                        break;
-                    default:
-                        nextTaskName = $"Do Task {currentTaskIndex}";
-                        break;
-                }
-                StartCoroutine(ShowMessageCoroutine($"✅ Task {completedTaskID} Complete! Your next step is to: **{nextTaskName}**"));
+                case 1: nextAction = "wear your flip-flops"; break;
+                case 2: nextAction = "open the bedroom door"; break;
+                default: nextAction = "proceed to next step"; break;
             }
 
-            
-            taskToggles[currentTaskIndex].gameObject.SetActive(true);
-            Debug.Log("Next Task: " + currentTaskIndex + " is now visible and expected.");
+            DisplayMessage($" Task {completedTaskID} Done! Next: <b>{nextAction}</b>");
         }
         else
         {
-            
-            if (messageText != null)
-            {
-                StartCoroutine(ShowMessageCoroutine("🎉 Level One Complete! Proceed to the Bathroom."));
-            }
-            Debug.Log("Level One Routine Complete! Ready for Bathroom.");
-           
+            // Level One Complete
+            DisplayMessage("Level One Complete! Proceed to the Bathroom.");
+            Debug.Log("All Level One tasks finished.");
+        }
+    }
+
+    private void DisplayMessage(string msg)
+    {
+        Debug.Log("Displaying Message: " + msg); // Add this line!
+        if (messageText != null)
+        {
+            StopAllCoroutines();
+            StartCoroutine(ShowMessageCoroutine(msg));
         }
     }
 
