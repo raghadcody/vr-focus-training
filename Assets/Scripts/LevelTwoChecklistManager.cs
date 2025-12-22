@@ -75,21 +75,21 @@ public class LevelTwoChecklistManager : MonoBehaviour
         }
     }
 
-    // Task 3: Close tap water
-    public void closetabwater()
-    {
-        if (currentTaskIndex == 3)
-        {
-            CompleteTask(3);
-        }
-    }
+    //// Task 3: Close tap water
+    //public void closetabwater()
+    //{
+    //    if (currentTaskIndex == 3)
+    //    {
+    //        CompleteTask(3);
+    //    }
+    //}
 
     // Task 4: Close bathroom door
     public void closebathrromdoor()
     {
-        if (currentTaskIndex == 4)
+        if (currentTaskIndex == 3)
         {
-            CompleteTask(4);
+            CompleteTask(3);
         }
     }
 
@@ -125,8 +125,8 @@ public class LevelTwoChecklistManager : MonoBehaviour
             {
                 case 1: nextAction = "open the tap"; break;
                 case 2: nextAction = "grab the toothbrush"; break;
-                case 3: nextAction = "close the tap"; break;
-                case 4: nextAction = "close the bathroom door"; break;
+                //case 3: nextAction = "close the tap"; break;
+                case 3: nextAction = "close the bathroom door"; break;
             }
 
             DisplayMessage($"Task {completedTaskID} Done! Next: <b>{nextAction}</b>");
