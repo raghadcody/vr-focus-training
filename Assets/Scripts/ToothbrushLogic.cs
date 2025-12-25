@@ -2,42 +2,70 @@ using UnityEngine;
 
 public class ToothbrushLogic : MonoBehaviour
 {
+    [Header("References")]
     public ParticleSystem foamParticles;
-    public Rigidbody Toothbrush; // Drag the toothbrush Rigidbody here
-    public float movementThreshold = 0.5f; // How fast you need to move to make foam
+    public Rigidbody toothbrushRigidbody;
+    public AudioSource scrubAudioSource; // Drag an AudioSource here
+    public AudioClip scrubSound;         // Drag your scrubbing sound file here
+
+    [Header("Settings")]
+    public float movementThreshold = 0.1f;
 
     private bool isInMouth = false;
 
+    void Start()
+    {
+        if (foamParticles != null) foamParticles.Stop();
+
+        // Setup AudioSource for looping
+        if (scrubAudioSource != null)
+        {
+            scrubAudioSource.clip = scrubSound;
+            scrubAudioSource.loop = true;
+            scrubAudioSource.playOnAwake = false;
+        }
+    }
+
     void Update()
     {
-        if (isInMouth)
+        if (isInMouth && toothbrushRigidbody != null)
         {
-            // Calculate how fast the brush is moving
-            float speed = Toothbrush.linearVelocity.magnitude;
+            float speed = toothbrushRigidbody.linearVelocity.magnitude;
 
-            // If moving fast enough, show foam. If stopped, hide foam.
             if (speed > movementThreshold)
             {
+                // Play Foam
                 if (!foamParticles.isPlaying) foamParticles.Play();
+
+                // Play Sound
+                if (!scrubAudioSource.isPlaying) scrubAudioSource.Play();
             }
             else
             {
+                // Stop Foam
                 if (foamParticles.isPlaying) foamParticles.Stop();
+
+                // Stop Sound
+                if (scrubAudioSource.isPlaying) scrubAudioSource.Stop();
             }
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Mouth")) isInMouth = true;
+        if (other.name == "Mouth_Trigger" || other.CompareTag("Mouth"))
+        {
+            isInMouth = true;
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Mouth"))
+        if (other.name == "Mouth_Trigger" || other.CompareTag("Mouth"))
         {
             isInMouth = false;
-            foamParticles.Stop(); // Always stop foam when leaving mouth
+            if (foamParticles != null) foamParticles.Stop();
+            if (scrubAudioSource != null) scrubAudioSource.Stop();
         }
     }
 }
